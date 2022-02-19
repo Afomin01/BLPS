@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ITagService {
     List<Tag> getAllTags();
-    List<Tag> getAllTagsByName(String name);
+
+    List<Tag> getAllTagsByLikeName(String name);
+
     Tag createTag(TagCreateDTO tagCreateDTO);
 }

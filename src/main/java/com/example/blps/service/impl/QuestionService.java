@@ -1,10 +1,12 @@
 package com.example.blps.service.impl;
 
 import com.example.blps.dto.QuestionCreateDTO;
+import com.example.blps.dto.QuestionsPageRequestDTO;
 import com.example.blps.model.Question;
 import com.example.blps.repository.QuestionRepository;
 import com.example.blps.service.IQuestionService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,6 +20,11 @@ public class QuestionService implements IQuestionService {
 
     @Override
     public Question createNewQuestion(QuestionCreateDTO createDTO) {
+        return null;
+    }
+
+    @Override
+    public Page<Question> getPageOfQuestion(QuestionsPageRequestDTO pageRequestDTO) {
         return null;
     }
 }

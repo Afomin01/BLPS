@@ -24,7 +24,7 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public List<Tag> getAllTagsByName(String name) {
+    public List<Tag> getAllTagsByLikeName(String name) {
         return null;
     }
 

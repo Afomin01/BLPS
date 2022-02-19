@@ -1,5 +1,6 @@
 package com.example.blps.dto.response;
 
+import com.example.blps.model.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,12 @@ import java.util.UUID;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
-public class TagGetResponse {
+public class TagInfoResponse {
     private final UUID id;
-    private final UUID name;
+    private final String name;
+
+    public TagInfoResponse(Tag tag) {
+        id = tag.getId();
+        name = tag.getName();
+    }
 }
