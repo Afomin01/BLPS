@@ -35,6 +35,7 @@ public class Question {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String text;
+    @Builder.Default
     private Instant creationTimeUTC = Instant.now();
     private int votes;
     private boolean needsModeration;

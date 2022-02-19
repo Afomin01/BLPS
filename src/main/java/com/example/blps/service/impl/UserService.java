@@ -1,6 +1,7 @@
 package com.example.blps.service.impl;
 
 import com.example.blps.dto.UserCreateDTO;
+import com.example.blps.exception.UserCreationException;
 import com.example.blps.model.User;
 import com.example.blps.repository.UserRepository;
 import com.example.blps.service.IUserService;
@@ -23,8 +24,13 @@ public class UserService implements IUserService {
 
     @Override
     public User createNewUser(UserCreateDTO createDTO) {
+        String username = createDTO.getUsername();
+        if (userRepository.countByUsername(username) != 0) {
+            throw new UserCreationException(String.format("User with username '%s' already exists", username));
+        }
+
         String encodedPassword = passwordEncoder.encode(createDTO.getPassword());
-        User user = new User(createDTO.getUsername(), encodedPassword);
+        User user = new User(username, encodedPassword);
         user = userRepository.save(user);
 
         return user;

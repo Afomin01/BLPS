@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -34,5 +35,9 @@ public class TagService implements ITagService {
         tag = tagRepository.save(tag);
 
         return tag;
+    }
+
+    public Optional<Tag> getTagByName(String name) {
+        return tagRepository.findByName(name);
     }
 }
