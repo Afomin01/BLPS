@@ -31,6 +31,6 @@ public class QuestionContentResponse {
         text = question.getText();
         tagInfoResponse = question.getTags().stream().map(TagInfoResponse::new).collect(Collectors.toList());
         creationDateUTC = question.getCreationTimeUTC();
-        rating = question.getRating();
+        rating = question.getVotes();
     }
 }

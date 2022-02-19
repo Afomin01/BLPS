@@ -23,7 +23,11 @@ public class UserService implements IUserService {
 
     @Override
     public User createNewUser(UserCreateDTO createDTO) {
-        return null;
+        String encodedPassword = passwordEncoder.encode(createDTO.getPassword());
+        User user = new User(createDTO.getUsername(), encodedPassword);
+        user = userRepository.save(user);
+
+        return user;
     }
 
     @Override

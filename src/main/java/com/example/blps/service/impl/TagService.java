@@ -20,16 +20,19 @@ public class TagService implements ITagService {
 
     @Override
     public List<Tag> getAllTags() {
-        return null;
+        return tagRepository.findAll();
     }
 
     @Override
     public List<Tag> getAllTagsByLikeName(String name) {
-        return null;
+        return tagRepository.findByNameContains(name);
     }
 
     @Override
     public Tag createTag(TagCreateDTO tagCreateDTO) {
-        return null;
+        Tag tag = new Tag(tagCreateDTO.getName());
+        tag = tagRepository.save(tag);
+
+        return tag;
     }
 }

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 @Slf4j
 public class MainControllerAdvice {
-    @ExceptionHandler(GeneralNotFoundException.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleGeneralPermissionDeniedException(final GeneralNotFoundException e) {
+    public ResponseEntity<String> handleGeneralPermissionDeniedException(final Exception e) {
         log.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }

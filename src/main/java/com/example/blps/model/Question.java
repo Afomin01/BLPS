@@ -1,6 +1,7 @@
 package com.example.blps.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Question {
     @Id
     @GeneratedValue
@@ -33,8 +35,8 @@ public class Question {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String text;
-    private Instant creationTimeUTC;
-    private int rating;
+    private Instant creationTimeUTC = Instant.now();
+    private int votes;
     private boolean needsModeration;
 
     @ManyToOne(optional = false)
@@ -47,11 +49,10 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
 
-    public Question(String title, String text, Instant creationTimeUTC, int rating, User user, Set<Tag> tags, boolean needsModeration) {
+    public Question(String title, String text, int votes, User user, Set<Tag> tags, boolean needsModeration) {
         this.title = title;
         this.text = text;
-        this.creationTimeUTC = creationTimeUTC;
-        this.rating = rating;
+        this.votes = votes;
         this.user = user;
         this.tags = tags;
         this.needsModeration = needsModeration;

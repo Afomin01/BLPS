@@ -3,7 +3,7 @@ package com.example.blps.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 
 @AllArgsConstructor
 @Getter

@@ -6,7 +6,7 @@ CREATE TABLE question
     title            VARCHAR(255),
     text             TEXT,
     creation_timeutc TIMESTAMP WITHOUT TIME ZONE,
-    rating           INTEGER,
+    votes           INTEGER,
     needs_moderation BOOLEAN,
     user_id          UUID NOT NULL,
     CONSTRAINT pk_question PRIMARY KEY (id)
