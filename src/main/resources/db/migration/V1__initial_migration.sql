@@ -29,7 +29,7 @@ CREATE TABLE tag
 CREATE TABLE "user"
 (
     id       UUID NOT NULL,
-    username VARCHAR(255),
+    username VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     rating   BIGINT,
     CONSTRAINT pk_user PRIMARY KEY (id)
