@@ -26,7 +26,7 @@ CREATE TABLE tag
     CONSTRAINT pk_tag PRIMARY KEY (id)
 );
 
-CREATE TABLE "user"
+CREATE TABLE users
 (
     id       UUID NOT NULL,
     username VARCHAR(255) UNIQUE,
@@ -36,7 +36,7 @@ CREATE TABLE "user"
 );
 
 ALTER TABLE question
-    ADD CONSTRAINT FK_QUESTION_ON_USER FOREIGN KEY (user_id) REFERENCES "user" (id);
+    ADD CONSTRAINT FK_QUESTION_ON_USER FOREIGN KEY (user_id) REFERENCES users (id);
 
 ALTER TABLE question_tag
     ADD CONSTRAINT fk_quetag_on_question FOREIGN KEY (question_id) REFERENCES question (id);
