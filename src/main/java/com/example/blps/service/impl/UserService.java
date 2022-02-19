@@ -5,14 +5,13 @@ import com.example.blps.model.User;
 import com.example.blps.repository.UserRepository;
 import com.example.blps.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class UserService implements IUserService, UserDetailsService {
+public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
