@@ -35,6 +35,7 @@ public class Question {
     private String text;
     private Instant creationTimeUTC;
     private int rating;
+    private boolean needsModeration;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -46,12 +47,13 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
 
-    public Question(String title, String text, Instant creationTimeUTC, int rating, User user, Set<Tag> tags) {
+    public Question(String title, String text, Instant creationTimeUTC, int rating, User user, Set<Tag> tags, boolean needsModeration) {
         this.title = title;
         this.text = text;
         this.creationTimeUTC = creationTimeUTC;
         this.rating = rating;
         this.user = user;
         this.tags = tags;
+        this.needsModeration = needsModeration;
     }
 }
