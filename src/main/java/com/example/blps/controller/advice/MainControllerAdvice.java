@@ -16,7 +16,7 @@ public class MainControllerAdvice {
     @ExceptionHandler({QuestionValidationException.class, TagCreationException.class,
             UserCreationException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleGeneralPermissionDeniedException(final QuestionValidationException e) {
+    public ResponseEntity<String> handleGeneralPermissionDeniedException(final RuntimeException e) {
         log.warn(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }

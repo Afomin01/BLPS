@@ -21,16 +21,18 @@ public class QuestionContentResponse {
     private final UUID id;
     private final String title;
     private final String text;
-    private final List<TagInfoResponse> tagInfoResponse;
+    private final List<TagInfoResponse> tags;
     private final Instant creationDateUTC;
     private final int rating;
+    private final boolean needsModeration;
 
     public QuestionContentResponse(Question question) {
         id = question.getId();
         title = question.getTitle();
         text = question.getText();
-        tagInfoResponse = question.getTags().stream().map(TagInfoResponse::new).collect(Collectors.toList());
+        tags = question.getTags().stream().map(TagInfoResponse::new).collect(Collectors.toList());
         creationDateUTC = question.getCreationTimeUTC();
         rating = question.getVotes();
+        needsModeration = question.isNeedsModeration();
     }
 }

@@ -14,19 +14,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
 @Slf4j
 public class QuestionService implements IQuestionService {
     private final static int START_QUESTION_VOTES = 0;
-    private final static long MIN_RATING_FOR_NO_MODERATION = 1001;
-    private final static int MIN_RATING_FOR_NEW_TAG = 1001;
-    private final static int MIN_TITLE_LENGTH = 10;
+    private final static long MIN_RATING_FOR_NO_MODERATION = 512;
+    private final static int MIN_RATING_FOR_NEW_TAG = 1024;
+    private final static int MIN_TITLE_LENGTH = 16;
     private final static int MAX_TITLE_LENGTH = 255;
-    private final static int MIN_TEXT_LENGTH = 20;
-    private final static int MAX_TEXT_LENGTH = 255;
+    private final static int MIN_TEXT_LENGTH = 64;
 
     private final QuestionRepository questionRepository;
     private final TagService tagService;
@@ -41,14 +39,18 @@ public class QuestionService implements IQuestionService {
 
         int titleLength = createDTO.getTitle().length();
         int textLength = createDTO.getText().length();
+
         if (createDTO.getUser().getRating() < 0) {
             throw new QuestionValidationException("User rating must bu positive for asking questions");
+
         } else if (titleLength < MIN_TITLE_LENGTH || titleLength > MAX_TITLE_LENGTH) {
             throw new QuestionValidationException(String.format("Question title length must be in [%d, %d]",
                     MIN_TITLE_LENGTH, MAX_TITLE_LENGTH));
-        } else if (textLength < MIN_TEXT_LENGTH || textLength > MAX_TEXT_LENGTH) {
-            throw new QuestionValidationException(String.format("Question text length must be in [%d, %d]",
-                    MIN_TEXT_LENGTH, MAX_TEXT_LENGTH));
+
+        } else if (textLength < MIN_TEXT_LENGTH) {
+            throw new QuestionValidationException(String.format("Question text length must be greater than %d",
+                    MIN_TEXT_LENGTH));
+
         }
 
         Set<Tag> tags = new HashSet<>();
@@ -77,7 +79,7 @@ public class QuestionService implements IQuestionService {
     }
 
     private boolean isQuestionNeedsModeration(long userRating) {
-        return userRating >= MIN_RATING_FOR_NO_MODERATION;
+        return userRating < MIN_RATING_FOR_NO_MODERATION;
     }
 
     private Tag tryCreateNewTag(String tagName, long userRating) {
