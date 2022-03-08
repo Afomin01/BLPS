@@ -1,6 +1,7 @@
 package com.example.blps.controller;
 
 import com.example.blps.dto.QuestionCreateDTO;
+import com.example.blps.dto.QuestionRateDTO;
 import com.example.blps.dto.QuestionsPageRequestDTO;
 import com.example.blps.dto.request.QuestionCreateRequest;
 import com.example.blps.dto.request.QuestionRateRequest;
@@ -12,6 +13,7 @@ import com.example.blps.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.util.List;
@@ -83,9 +84,23 @@ public class QuestionController {
 
     @PutMapping(value = "/vote")
     public ResponseEntity<QuestionContentResponse> voteForQuestion(@RequestBody final QuestionRateRequest request,
-                                                                     final Principal principal) {
-        //TODO
-        return null;
+                                                                   final Principal principal) {
+        UUID uuid = userService.loadUserEntity(principal).getId();
+
+        QuestionRateDTO questionRateDTO = new QuestionRateDTO(
+                request.getQuestionId(),
+                uuid,
+                request.isUpvote()
+        );
+
+        Question question = questionService.rateQuestion(questionRateDTO);
+
+        QuestionContentResponse response = new QuestionContentResponse(question);
+
+        return ResponseEntity.
+                ok().
+                contentType(MediaType.APPLICATION_JSON).
+                body(response);
     }
 
 
