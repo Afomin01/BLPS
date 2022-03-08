@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -42,8 +43,7 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity<QuestionContentResponse> createNewQuestion(@RequestBody final QuestionCreateRequest request,
                                                                      final Principal principal) {
-
-        User user = userService.loadUserByUsername(principal.getName());
+        User user = userService.getUserById(UUID.fromString(principal.getName()));
 
         QuestionCreateDTO createDTO = new QuestionCreateDTO(
                 request.getTitle(),

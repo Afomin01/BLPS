@@ -1,13 +1,12 @@
 package com.example.blps.service;
 
 import com.example.blps.dto.ChangeUserRatingDTO;
-import com.example.blps.dto.UserCreateDTO;
 import com.example.blps.model.User;
 
-public interface IUserService {
-    User createNewUser(UserCreateDTO createDTO);
+import java.util.UUID;
 
-    User loadUserByUsername(String username);
+public interface IUserService {
+    User getUserById(UUID uuid);
 
     User changeUserRating(ChangeUserRatingDTO dto);
 }
