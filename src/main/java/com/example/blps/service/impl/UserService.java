@@ -70,9 +70,8 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
     @Override
-    public User changeUserRating(ChangeUserRatingDTO dto) {
-        //TODO add new method
-        User user = userRepository.getById(dto.getUserId());
+    public User changeUserRating(ChangeUserRatingDTO dto) throws NotFoundException {
+        User user = getUserById(dto.getUserId());
         user.setRating(user.getRating() + dto.getRatingAddition());
         user = userRepository.save(user);
 

@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface IUserService {
     User getUserById(UUID uuid) throws NotFoundException;
 
-    User changeUserRating(ChangeUserRatingDTO dto);
+    User changeUserRating(ChangeUserRatingDTO dto) throws NotFoundException;
 
     User loadUserEntity(Principal principal);
 }
