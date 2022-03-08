@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,13 +83,14 @@ public class QuestionController {
                 body(response);
     }
 
-    @PutMapping(value = "/vote")
+    @PutMapping(value = "/vote/{id}")
     public ResponseEntity<QuestionContentResponse> voteForQuestion(@RequestBody final QuestionRateRequest request,
+                                                                   @PathVariable final UUID id,
                                                                    final Principal principal) {
         UUID uuid = userService.loadUserEntity(principal).getId();
 
         QuestionRateDTO questionRateDTO = new QuestionRateDTO(
-                request.getQuestionId(),
+                id,
                 uuid,
                 request.isUpvote()
         );

@@ -14,6 +14,5 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 public class QuestionRateRequest {
-    private UUID questionId;
     private boolean isUpvote;
 }

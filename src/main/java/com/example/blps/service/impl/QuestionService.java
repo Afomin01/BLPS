@@ -5,9 +5,9 @@ import com.example.blps.dto.QuestionCreateDTO;
 import com.example.blps.dto.QuestionRateDTO;
 import com.example.blps.dto.QuestionsPageRequestDTO;
 import com.example.blps.dto.TagCreateDTO;
-import com.example.blps.exception.NotFoundException;
-import com.example.blps.exception.GeneralValidationException;
 import com.example.blps.exception.GeneralCreationException;
+import com.example.blps.exception.GeneralValidationException;
+import com.example.blps.exception.NotFoundException;
 import com.example.blps.model.Question;
 import com.example.blps.model.Tag;
 import com.example.blps.model.UserQuestionVote;
@@ -108,11 +108,14 @@ public class QuestionService implements IQuestionService {
             @Override
             public Question doInTransaction(TransactionStatus status) {
                 Question question = getQuestionById(dto.getQuestionId());
+                if (question.getUser().getId().equals(dto.getUserId())) {
+                    throw new GeneralValidationException("You can not vote for your own question. Selflike is strictly prohibited!!!");
+                }
 
                 UserQuestionVote userQuestionVote = userQuestionVoteRepository.findByQuestionIdAndUserId(dto.getQuestionId(), dto.getUserId()).orElse(null);
 
                 int newQuestionRating = question.getRating();
-                if(userQuestionVote==null){
+                if (userQuestionVote == null) {
                     newQuestionRating += dto.isUpvote() ? 1 : -1;
 
                     question.setRating(newQuestionRating);
@@ -125,23 +128,33 @@ public class QuestionService implements IQuestionService {
                             dto.isUpvote() ? AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE : -AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE
                     );
 
+                    UserQuestionVote questionVote = new UserQuestionVote(
+                            question,
+                            userService.getUserById(dto.getUserId()),
+                            dto.isUpvote()
+                    );
+
+                    userQuestionVoteRepository.save(questionVote);
+
                     userService.changeUserRating(changeVoterUserRating);
                     userService.changeUserRating(changeAuthorRating);
 
-                }else{
-                    if(userQuestionVote.isUpvote() == dto.isUpvote()){
+                } else {
+                    if (userQuestionVote.isUpvote() == dto.isUpvote()) {
                         return question;
 
-                    }else {
+                    } else {
                         newQuestionRating += dto.isUpvote() ? 2 : -2;
 
                         question.setRating(newQuestionRating);
                         ChangeUserRatingDTO changeUserRatingDTO = new ChangeUserRatingDTO(
                                 question.getUser().getId(),
-                                dto.isUpvote() ? AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE *2 : -AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE*2
+                                dto.isUpvote() ? AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE * 2 : -AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE * 2
                         );
 
                         userService.changeUserRating(changeUserRatingDTO);
+                        userQuestionVote.setUpvote(dto.isUpvote());
+                        userQuestionVoteRepository.save(userQuestionVote);
                     }
                 }
 
@@ -151,7 +164,7 @@ public class QuestionService implements IQuestionService {
     }
 
     @Override
-    public Question getQuestionById(UUID uuid) throws NotFoundException{
+    public Question getQuestionById(UUID uuid) throws NotFoundException {
         return questionRepository.
                 findById(uuid).
                 orElseThrow(() -> new NotFoundException("Question with UUID " + uuid + " not found."));

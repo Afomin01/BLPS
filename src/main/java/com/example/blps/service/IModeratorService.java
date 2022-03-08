@@ -1,5 +1,6 @@
 package com.example.blps.service;
 
+import com.example.blps.exception.GeneralValidationException;
 import com.example.blps.exception.NotFoundException;
 import com.example.blps.model.Question;
 
@@ -10,5 +11,5 @@ public interface IModeratorService {
 
     void deleteBadQuestion(UUID id) throws NotFoundException;
 
-    Question acceptQuestion(UUID id) throws NotFoundException;
+    Question acceptQuestion(UUID id) throws NotFoundException, GeneralValidationException;
 }

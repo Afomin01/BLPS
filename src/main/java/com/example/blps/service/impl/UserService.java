@@ -1,8 +1,7 @@
 package com.example.blps.service.impl;
 
 import com.example.blps.dto.ChangeUserRatingDTO;
-import com.example.blps.dto.UserCreateDTO;
-import com.example.blps.exception.UserCreationException;
+import com.example.blps.exception.NotFoundException;
 import com.example.blps.model.User;
 import com.example.blps.model.xml.UserDetailsXmlImpl;
 import com.example.blps.model.xml.UsersXml;
@@ -10,7 +9,6 @@ import com.example.blps.repository.UserRepository;
 import com.example.blps.service.IUserService;
 import com.example.blps.util.UserLoader;
 import lombok.extern.slf4j.Slf4j;
-import lombok.var;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -65,8 +63,10 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
     @Override
-    public User getUserById(UUID uuid) {
-        return null;
+    public User getUserById(UUID uuid) throws NotFoundException {
+        return userRepository.
+                findById(uuid).
+                orElseThrow(() -> new NotFoundException("User with UUID "+ uuid +" not found. "));
     }
 
     @Override
