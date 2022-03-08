@@ -36,9 +36,8 @@ public class QuestionService implements IQuestionService {
     private final static int MIN_TITLE_LENGTH = 16;
     private final static int MAX_TITLE_LENGTH = 255;
     private final static int MIN_TEXT_LENGTH = 64;
-    private final static int AUTHOR_RATING_ADDITION_FOR_UPVOTE = 10;
-    private final static int AUTHOR_RATING_ADDITION_FOR_DOWNVOTE = -10;
-    private final static int RATING_ADDITION_FOR_VOTE = 1;
+    private final static int AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE = 10;
+    private final static int VOTER_REPUTATION_ADDITION_FOR_VOTE = 1;
 
     private final QuestionRepository questionRepository;
     private final TagService tagService;
@@ -119,18 +118,18 @@ public class QuestionService implements IQuestionService {
                     question.setRating(newQuestionRating);
                     ChangeUserRatingDTO changeVoterUserRating = new ChangeUserRatingDTO(
                             dto.getUserId(),
-                            RATING_ADDITION_FOR_VOTE
+                            VOTER_REPUTATION_ADDITION_FOR_VOTE
                     );
                     ChangeUserRatingDTO changeAuthorRating = new ChangeUserRatingDTO(
                             question.getUser().getId(),
-                            dto.isUpvote() ? AUTHOR_RATING_ADDITION_FOR_UPVOTE : AUTHOR_RATING_ADDITION_FOR_DOWNVOTE
+                            dto.isUpvote() ? AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE : -AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE
                     );
 
                     userService.changeUserRating(changeVoterUserRating);
                     userService.changeUserRating(changeAuthorRating);
 
                 }else{
-                    if(userQuestionVote.isUpvote() && dto.isUpvote()){
+                    if(userQuestionVote.isUpvote() == dto.isUpvote()){
                         return question;
 
                     }else {
@@ -139,7 +138,7 @@ public class QuestionService implements IQuestionService {
                         question.setRating(newQuestionRating);
                         ChangeUserRatingDTO changeUserRatingDTO = new ChangeUserRatingDTO(
                                 question.getUser().getId(),
-                                dto.isUpvote() ? AUTHOR_RATING_ADDITION_FOR_UPVOTE*2 : AUTHOR_RATING_ADDITION_FOR_DOWNVOTE*2
+                                dto.isUpvote() ? AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE *2 : -AUTHOR_REPUTATION_ADDITION_FOR_UPVOTE*2
                         );
 
                         userService.changeUserRating(changeUserRatingDTO);

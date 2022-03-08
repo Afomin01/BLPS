@@ -53,6 +53,7 @@ public class UserService implements UserDetailsService, IUserService {
                 .orElseThrow(() -> new IllegalArgumentException("No user with id " + uuid));
     }
 
+    @Override
     public User loadUserEntity(Principal principal) {
         String id = users.values().stream()
                 .filter(user -> user.getUsername().equals(principal.getName()))
