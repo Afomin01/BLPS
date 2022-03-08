@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<userManagement>
+    <users>
+        <user id="1">
+            <username>test</username>
+<!--            test-->
+            <password>$2a$10$e9pVHWVkQBksFPjZE1rTPO3uOCQlDSkJF6LpGMT9P/jDfvkHo0DTW</password>
+            <roles>
+                <role>role 1</role>
+                <role>role 2</role>
+            </roles>
+        </user>
+    </users>
+</userManagement>
