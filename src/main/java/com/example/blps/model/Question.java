@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
@@ -16,7 +17,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,7 +43,7 @@ public class Question {
     private String text;
     @Builder.Default
     private Instant creationTimeUTC = Instant.now();
-    private int votes;
+    private int rating;
     private boolean needsModeration;
 
     @ManyToOne(optional = false)
@@ -50,12 +56,28 @@ public class Question {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
     private Set<Tag> tags;
 
-    public Question(String title, String text, int votes, User user, Set<Tag> tags, boolean needsModeration) {
+    @OneToMany(mappedBy = "question", orphanRemoval = true)
+    private Set<UserQuestionVote> userQuestionVotes = new HashSet<>();
+
+    public Question(String title, String text, int rating, User user, Set<Tag> tags, boolean needsModeration) {
         this.title = title;
         this.text = text;
-        this.votes = votes;
+        this.rating = rating;
         this.user = user;
         this.tags = tags;
         this.needsModeration = needsModeration;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Question question = (Question) o;
+        return id != null && Objects.equals(id, question.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

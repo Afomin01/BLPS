@@ -1,5 +1,6 @@
 package com.example.blps.service.impl;
 
+import com.example.blps.dto.ChangeUserRatingDTO;
 import com.example.blps.dto.UserCreateDTO;
 import com.example.blps.exception.UserCreationException;
 import com.example.blps.model.User;
@@ -43,5 +44,15 @@ public class UserService implements IUserService {
                 orElseThrow(
                         () -> new UsernameNotFoundException("User with username ")
                 );
+    }
+
+    @Override
+    public User changeUserRating(ChangeUserRatingDTO dto) {
+        //TODO add new method
+        User user = userRepository.getById(dto.getUserId());
+        user.setRating(user.getRating() + dto.getRatingAddition());
+        user = userRepository.save(user);
+
+        return user;
     }
 }

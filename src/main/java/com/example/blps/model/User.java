@@ -10,8 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +31,9 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private long rating = 0;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<UserQuestionVote> questionUserQuestionVotes = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -9,9 +9,9 @@ import org.hibernate.Hibernate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -19,26 +19,33 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Tag {
+public class UserQuestionVote {
     @Id
     @GeneratedValue
     private UUID id;
 
-    private String name;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
-    @ManyToMany(mappedBy = "tags")
-    private Set<Question> questions;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Tag(String name) {
-        this.name = name;
+    private boolean isUpvote;
+
+    public UserQuestionVote(Question question, User user, boolean isUpvote) {
+        this.question = question;
+        this.user = user;
+        this.isUpvote = isUpvote;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Tag tag = (Tag) o;
-        return id != null && Objects.equals(id, tag.id);
+        UserQuestionVote that = (UserQuestionVote) o;
+        return id != null && Objects.equals(id, that.id);
     }
 
     @Override
