@@ -12,5 +12,5 @@ public interface IUserService {
 
     User changeUserRating(ChangeUserRatingDTO dto) throws NotFoundException;
 
-    User loadUserEntity(Principal principal);
+    User loadUserEntityByPrincipal(Principal principal);
 }

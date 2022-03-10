@@ -77,24 +77,30 @@ public class QuestionService implements IQuestionService {
 
         }
 
-        Set<Tag> tags = new HashSet<>();
-        for (String tagName : createDTO.getTags()) {
-            Tag tag = tagService.getTagByName(tagName).orElseGet(
-                    () -> tryCreateNewTag(tagName, createDTO.getUser().getRating()));
-            tags.add(tag);
-        }
+        return transactionTemplate.execute(new TransactionCallback<Question>() {
+            @Override
+            public Question doInTransaction(TransactionStatus status) {
+                Set<Tag> tags = new HashSet<>();
+                for (
+                        String tagName : createDTO.getTags()) {
+                    Tag tag = tagService.getTagByName(tagName).orElseGet(
+                            () -> tryCreateNewTag(tagName, createDTO.getUser().getRating()));
+                    tags.add(tag);
+                }
 
-        Question question = Question.builder()
-                .title(createDTO.getTitle())
-                .text(createDTO.getText())
-                .rating(START_QUESTION_RATING)
-                .user(createDTO.getUser())
-                .tags(tags)
-                .needsModeration(isQuestionNeedsModeration(createDTO.getUser().getRating()))
-                .build();
-        question = questionRepository.save(question);
+                Question question = Question.builder()
+                        .title(createDTO.getTitle())
+                        .text(createDTO.getText())
+                        .rating(START_QUESTION_RATING)
+                        .user(createDTO.getUser())
+                        .tags(tags)
+                        .needsModeration(isQuestionNeedsModeration(createDTO.getUser().getRating()))
+                        .build();
+                question = questionRepository.save(question);
 
-        return question;
+                return question;
+            }
+        });
     }
 
     @Override
@@ -112,7 +118,11 @@ public class QuestionService implements IQuestionService {
                     throw new GeneralValidationException("You can not vote for your own question. Selflike is strictly prohibited!!!");
                 }
 
-                UserQuestionVote userQuestionVote = userQuestionVoteRepository.findByQuestionIdAndUserId(dto.getQuestionId(), dto.getUserId()).orElse(null);
+                UserQuestionVote userQuestionVote = userQuestionVoteRepository.findByQuestionIdAndUserId(
+                                dto.getQuestionId(),
+                                dto.getUserId()
+                        ).
+                        orElse(null);
 
                 int newQuestionRating = question.getRating();
                 if (userQuestionVote == null) {
@@ -141,7 +151,7 @@ public class QuestionService implements IQuestionService {
 
                 } else {
                     if (userQuestionVote.isUpvote() == dto.isUpvote()) {
-                        return question;
+                        throw new GeneralValidationException("You have already voted the same for this question!");
 
                     } else {
                         newQuestionRating += dto.isUpvote() ? 2 : -2;

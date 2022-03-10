@@ -52,7 +52,7 @@ public class UserService implements UserDetailsService, IUserService {
     }
 
     @Override
-    public User loadUserEntity(Principal principal) {
+    public User loadUserEntityByPrincipal(Principal principal) {
         String id = users.values().stream()
                 .filter(user -> user.getUsername().equals(principal.getName()))
                 .findFirst()

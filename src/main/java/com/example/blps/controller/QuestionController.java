@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "question")
+@RequestMapping(value = "/question")
 public class QuestionController {
     private final IQuestionService questionService;
     private final IUserService userService;
@@ -45,7 +45,7 @@ public class QuestionController {
     @PostMapping
     public ResponseEntity<QuestionContentResponse> createNewQuestion(@RequestBody final QuestionCreateRequest request,
                                                                      final Principal principal) {
-        User user = userService.getUserById(UUID.fromString(principal.getName()));
+        User user = userService.loadUserEntityByPrincipal(principal);
 
         QuestionCreateDTO createDTO = new QuestionCreateDTO(
                 request.getTitle(),
@@ -87,7 +87,7 @@ public class QuestionController {
     public ResponseEntity<QuestionContentResponse> voteForQuestion(@RequestBody final QuestionRateRequest request,
                                                                    @PathVariable final UUID id,
                                                                    final Principal principal) {
-        UUID uuid = userService.loadUserEntity(principal).getId();
+        UUID uuid = userService.loadUserEntityByPrincipal(principal).getId();
 
         QuestionRateDTO questionRateDTO = new QuestionRateDTO(
                 id,
