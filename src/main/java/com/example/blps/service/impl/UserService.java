@@ -33,7 +33,16 @@ public class UserService implements UserDetailsService, IUserService {
 
     @PostConstruct
     private void loadUsersFromXmlFile() {
-        UsersXml loadedUsers = UserLoader.loadUsers();
+        UsersXml loadedUsers = null;
+
+        try {
+            loadedUsers = UserLoader.loadUsers();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
 
         users = loadedUsers.getUsers().stream()
                 .collect(Collectors.toMap(UserDetailsXmlImpl::getUsername, Function.identity()));
