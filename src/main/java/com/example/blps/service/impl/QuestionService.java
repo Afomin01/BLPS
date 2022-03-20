@@ -41,6 +41,7 @@ public class QuestionService implements IQuestionService {
 
     private final QuestionRepository questionRepository;
     private final TagService tagService;
+    private final TagCounterService tagCounterService;
     private final IUserService userService;
     private final UserQuestionVoteRepository userQuestionVoteRepository;
 
@@ -48,11 +49,13 @@ public class QuestionService implements IQuestionService {
 
     public QuestionService(final QuestionRepository questionRepository,
                            final TagService tagService,
+                           final TagCounterService tagCounterService,
                            final IUserService userService,
                            final PlatformTransactionManager platformTransactionManager,
                            final UserQuestionVoteRepository userQuestionVoteRepository) {
         this.questionRepository = questionRepository;
         this.tagService = tagService;
+        this.tagCounterService = tagCounterService;
         this.userService = userService;
         transactionTemplate = new TransactionTemplate(platformTransactionManager);
         this.userQuestionVoteRepository = userQuestionVoteRepository;
@@ -77,12 +80,11 @@ public class QuestionService implements IQuestionService {
 
         }
 
-        return transactionTemplate.execute(new TransactionCallback<Question>() {
+        Question question = transactionTemplate.execute(new TransactionCallback<Question>() {
             @Override
             public Question doInTransaction(TransactionStatus status) {
                 Set<Tag> tags = new HashSet<>();
-                for (
-                        String tagName : createDTO.getTags()) {
+                for (String tagName : createDTO.getTags()) {
                     Tag tag = tagService.getTagByName(tagName).orElseGet(
                             () -> tryCreateNewTag(tagName, createDTO.getUser().getRating()));
                     tags.add(tag);
@@ -101,6 +103,12 @@ public class QuestionService implements IQuestionService {
                 return question;
             }
         });
+
+        for (String tagName : createDTO.getTags()) {
+            tagCounterService.sendTagUsageRequest(tagName);
+        }
+
+        return question;
     }
 
     @Override
