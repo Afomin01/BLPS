@@ -5,6 +5,7 @@ import com.example.blps.model.TagCounter;
 import com.example.blps.repository.TagCounterRepository;
 import com.example.blps.repository.TagRepository;
 import com.example.blps.service.ITagCounterService;
+import lombok.extern.slf4j.Slf4j;
 import lombok.var;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -14,7 +15,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TagCounterService implements ITagCounterService {
     private final TagRepository tagRepository;
@@ -46,13 +49,19 @@ public class TagCounterService implements ITagCounterService {
         tagUsageRequestProducer.send(record);
     }
 
-    @KafkaListener(topicPartitions = @TopicPartition(topic = "tagUsageRequests", partitions = "0"))
+    @KafkaListener(topicPartitions = @TopicPartition(topic = "tagUsageRequests", partitions = "0"),
+            batch = "true", properties = {"fetch.min.bytes=300"})
     private void consumeTagUsageRequestsFromFirstPartition(@Payload List<String> tagNames) {
+        log.info("1st listener get {} tags: {}", tagNames.size(),
+                tagNames.stream().limit(10).collect(Collectors.joining(",")));
         consumeTagUsageRequests(tagNames);
     }
 
-    @KafkaListener(topicPartitions = @TopicPartition(topic = "tagUsageRequests", partitions = "1"))
+    @KafkaListener(topicPartitions = @TopicPartition(topic = "tagUsageRequests", partitions = "1"),
+            batch = "true", properties = {"fetch.min.bytes=300"})
     private void consumeTagUsageRequestsFromSecondPartition(@Payload List<String> tagNames) {
+        log.info("2nd listener get {} tags: {}", tagNames.size(),
+                tagNames.stream().limit(10).collect(Collectors.joining(",")));
         consumeTagUsageRequests(tagNames);
     }
 

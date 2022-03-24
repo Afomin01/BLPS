@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Configuration
 public class KafkaConfig {
-    @Value(value = "${kafka.bootstrapAddress}")
+    @Value(value = "${spring.kafka.bootstrap-servers}")
     private String bootstrapAddress;
 
     @Bean
@@ -32,7 +32,7 @@ public class KafkaConfig {
     @Bean
     public Producer<String, String> tagUsageRequestProducer() {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
+        props.put("bootstrap.servers", bootstrapAddress);
         props.put("acks", "all");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
