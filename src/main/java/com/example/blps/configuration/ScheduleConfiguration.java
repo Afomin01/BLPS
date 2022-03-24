@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Configuration
 @EnableScheduling
@@ -27,22 +28,27 @@ public class ScheduleConfiguration {
     @Transactional
     public void manageBadQuestions() {
         log.info("Started managing bad questions.");
+        AtomicInteger deletedQuestions = new AtomicInteger(0);
 
         List<Question> awfulQuestions = questionRepository.findQuestionsByRatingLessThan(QUESTION_RATING_TO_DELETE);
 
         awfulQuestions.stream().parallel().forEach(question -> {
             questionRepository.delete(question);
             log.info("Question with id " + question.getId() + " with rating " + question.getRating() + " was deleted because it has too low rating.");
+            deletedQuestions.incrementAndGet();
         });
 
+
+        AtomicInteger backToModerationQuestions = new AtomicInteger(0);
 
         List<Question> badQuestions = questionRepository.findUnmoderatedQuestionsByRatingLessThan(QUESTION_RATING_FOR_NEW_MODERATION);
 
         badQuestions.stream().parallel().forEach(question -> {
             question.setNeedsModeration(true);
             log.info("Question with id " + question.getId() + " with rating " + question.getRating() + " was sent back to moderation.");
+            backToModerationQuestions.incrementAndGet();
         });
 
-        log.info("Finished managing bad questions.");
+        log.info("Finished managing bad questions. Deleted " + deletedQuestions.get() + " questions. Send back to moderation: " + backToModerationQuestions.get());
     }
 }
