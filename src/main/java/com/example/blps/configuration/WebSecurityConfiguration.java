@@ -39,8 +39,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .antMatchers(HttpMethod.POST, "/user").permitAll()
-                .antMatchers("/user").authenticated()
+                .antMatchers("/moderate/question", "/moderate/question/*").hasRole("MODERATOR")
+                .antMatchers("/question", "/question/*", "/question/vote/*").hasRole("USER")
+                .antMatchers("/tag").hasRole("USER")
                 .anyRequest().authenticated();
 
     }
@@ -52,7 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder(4);
     }
 
     @Bean

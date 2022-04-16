@@ -32,7 +32,7 @@ public class QuestionContentResponse {
         text = question.getText();
         tags = question.getTags().stream().map(TagInfoResponse::new).collect(Collectors.toList());
         creationDateUTC = question.getCreationTimeUTC();
-        rating = question.getVotes();
+        rating = question.getRating();
         needsModeration = question.isNeedsModeration();
     }
 }

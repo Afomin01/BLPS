@@ -2,16 +2,16 @@ package com.example.blps.controller;
 
 import com.example.blps.dto.response.TagInfoResponse;
 import com.example.blps.model.Tag;
+import com.example.blps.service.ITagCounterService;
 import com.example.blps.service.ITagService;
+import com.example.blps.service.impl.TagCounterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,9 +19,11 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/tag")
 public class TagController {
     private final ITagService tagService;
+    private final ITagCounterService tagCounterService;
 
-    public TagController(final ITagService tagService) {
+    public TagController(final ITagService tagService, final TagCounterService tagCounterService) {
         this.tagService = tagService;
+        this.tagCounterService = tagCounterService;
     }
 
     @GetMapping
@@ -48,5 +50,13 @@ public class TagController {
                 ok().
                 contentType(MediaType.APPLICATION_JSON).
                 body(response);
+    }
+
+    @GetMapping("{id}/counter")
+    public ResponseEntity<Long> getTagCounter(@PathVariable UUID id) {
+        long counter = tagCounterService.getTagCounter(id);
+        return ResponseEntity
+                .ok()
+                .body(counter);
     }
 }

@@ -1,10 +1,16 @@
 package com.example.blps.service;
 
-import com.example.blps.dto.UserCreateDTO;
+import com.example.blps.dto.ChangeUserRatingDTO;
+import com.example.blps.exception.NotFoundException;
 import com.example.blps.model.User;
 
-public interface IUserService {
-    User createNewUser(UserCreateDTO createDTO);
+import java.security.Principal;
+import java.util.UUID;
 
-    User loadUserByUsername(String username);
+public interface IUserService {
+    User getUserById(UUID uuid) throws NotFoundException;
+
+    User changeUserRating(ChangeUserRatingDTO dto) throws NotFoundException;
+
+    User loadUserEntityByPrincipal(Principal principal);
 }

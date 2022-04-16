@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<userManagement>
+    <users>
+        <user id="5853f1e1-d131-4461-ae77-e36f921b15e7">
+            <username>senior</username>
+            <password>$2a$10$e9pVHWVkQBksFPjZE1rTPO3uOCQlDSkJF6LpGMT9P/jDfvkHo0DTW</password>
+            <roles>
+                <role>ROLE_USER</role>
+            </roles>
+        </user>
+        <user id="adeb53fe-5f77-4cbb-825a-63c5b143a502">
+            <username>normal</username>
+            <password>$2a$10$e9pVHWVkQBksFPjZE1rTPO3uOCQlDSkJF6LpGMT9P/jDfvkHo0DTW</password>
+            <roles>
+                <role>ROLE_USER</role>
+            </roles>
+        </user>
+        <user id="5e363626-b6cd-486b-a201-0b5f93cc1ea4">
+            <username>idiot</username>
+            <password>$2a$10$e9pVHWVkQBksFPjZE1rTPO3uOCQlDSkJF6LpGMT9P/jDfvkHo0DTW</password>
+            <roles>
+                <role>ROLE_USER</role>
+            </roles>
+        </user>
+        <user id="f47c5ac7-3c66-4209-9d1e-a8454327359b">
+            <username>moderator</username>
+            <password>$2a$10$e9pVHWVkQBksFPjZE1rTPO3uOCQlDSkJF6LpGMT9P/jDfvkHo0DTW</password>
+            <roles>
+                <role>ROLE_MODERATOR</role>
+            </roles>
+        </user>
+    </users>
+</userManagement>
